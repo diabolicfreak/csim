@@ -11,8 +11,23 @@
 |
 */
 
-Route::get('/', function()
-{
-    $name = 'lordvcs';
-	return View::make('hello')->with('namsa', $name);
+//Route::get('/', function()
+//{
+//    $name = 'lordvcs';
+//	return View::make('hello')->with('namsa', $name);
+//});
+//
+//Route::get('/db', function()
+//{
+//    /*return DB::table('select database();');*/
+//    $users = DB::table('users')->get();
+//
+//      var_dump($users);
+//
+//});
+
+Route::get('/', function(){
+    return View::make('index');
 });
+
+Route::resource('users', 'UserController');
