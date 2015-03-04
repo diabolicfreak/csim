@@ -8,8 +8,8 @@ class UserController extends \BaseController {
 	 * @return Response
 	 */
 	public function index()
-	{
-		return View::make('sdads');
+	{   $users = User::all();
+		return View::make('users.index')->with('users', $users);
 	}
 
 
@@ -20,7 +20,7 @@ class UserController extends \BaseController {
 	 */
 	public function create()
 	{
-		//
+		return View::make('users.create');
 	}
 
 
@@ -31,7 +31,11 @@ class UserController extends \BaseController {
 	 */
 	public function store()
 	{
-		//
+		$name = Input::get('name');
+        $user = new User();
+        $user->name = $name;
+        $user->save();
+        return Redirect::route('users.index');
 	}
 
 
@@ -43,7 +47,8 @@ class UserController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//
+        $single_user = User::findOrFail($id);
+		return View::make('users.single')->with('single_user', $single_user);
 	}
 
 
