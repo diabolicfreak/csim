@@ -2,6 +2,11 @@
 
 class UserController extends \BaseController {
 
+    public function __construct()
+    {
+        $this->beforeFilter('csrf', array('on' => ['post', 'put']));
+    }
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -31,11 +36,23 @@ class UserController extends \BaseController {
 	 */
 	public function store()
 	{
-		$name = Input::get('name');
+        $rules = array(
+            'name' => array('required', 'unique:users')
+        );
+
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails())
+        {
+            return Redirect::route('users.create')->withErrors($validator)->withInput();
+        }
+
+		$name = Input::all();
         $user = new User();
-        $user->name = $name;
+        $user->name = $name['name'];
+        $user->monthly = $name['monthly'];
         $user->save();
-        return Redirect::route('users.index');
+        return Redirect::route('users.index')->withMessage('New user was added');
 	}
 
 
@@ -60,7 +77,8 @@ class UserController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		//
+        $user = User::findOrFail($id);
+		return View::make('users.edit')->withUser($user);
 	}
 
 
@@ -72,7 +90,23 @@ class UserController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//
+        $rules = array(
+            'name' => 'required|unique:users,name,'.$id
+        );
+
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails())
+        {
+            return Redirect::route('users.edit', $id)->withErrors($validator)->withInput();
+        }
+
+        $name = Input::all();
+        $user = User::find($id);
+        $user->name = $name['name'];
+        $user->monthly = $name['monthly'];
+        $user->update();
+        return Redirect::route('users.index')->withMessage('User successfully updated');
 	}
 
 
