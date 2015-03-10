@@ -17,3 +17,17 @@ Route::get('/', array('as' => 'home', function(){
 }) );
 
 Route::resource('users', 'UserController');
+
+
+// Migrations
+Route::get('migrate', function(){
+    echo '<br>init migrate...';
+    Artisan::call('migrate', ['--quiet' => true, '--force' => true]);
+    echo 'done migrate';
+});
+
+Route::get('rollback', function(){
+    echo '<br>init migrate:rollback';
+    Artisan::call('migrate:rollback', ['--quiet' => true, '--force' => true]);
+    echo 'done migrate:rollback';
+});
