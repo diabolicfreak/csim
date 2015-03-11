@@ -118,7 +118,8 @@ class UserController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		User::findOrFail($id)->delete();
+        Return Redirect::route('users.index')->withMessage('User deleted');
 	}
 
 
